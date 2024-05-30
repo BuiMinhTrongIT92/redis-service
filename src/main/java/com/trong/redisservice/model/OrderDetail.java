@@ -1,4 +1,4 @@
-package model;
+package com.trong.redisservice.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -3,13 +3,12 @@ package com.trong.redisservice.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.trong.redisservice.model.Product;
 import com.trong.redisservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +31,9 @@ public class ProductServiceImpl implements ProductService {
             Sort sort = pageRequest.getSort();
             String sortDirection = sort.getOrderFor("id").getDirection() == Sort.Direction.ASC ? "asc" : "desc";
             key = String.format("%s_%s_%s_%s_%s_%s", actionType, keyword, productId, pageNumber, pageSize, sortDirection);
+        } else {
+            key = String.format("%s_%s", actionType, keyword, productId);
         }
-        key = String.format("%s_%s", actionType, keyword);
         return key;
     }
 
