@@ -1,0 +1,8 @@
+/Users/trongbui/Documents/ProjectStudy/Microservice/redis-service/src/main/java/com/trong/redisservice/RedisServiceApplication.java
+/Users/trongbui/Documents/ProjectStudy/Microservice/redis-service/src/main/java/com/trong/redisservice/config/RedisConfig.java
+/Users/trongbui/Documents/ProjectStudy/Microservice/redis-service/src/main/java/com/trong/redisservice/controller/RedisController.java
+/Users/trongbui/Documents/ProjectStudy/Microservice/redis-service/src/main/java/com/trong/redisservice/service/ProductService.java
+/Users/trongbui/Documents/ProjectStudy/Microservice/redis-service/src/main/java/com/trong/redisservice/service/impl/ProductServiceImpl.java
+/Users/trongbui/Documents/ProjectStudy/Microservice/redis-service/src/main/java/model/Order.java
+/Users/trongbui/Documents/ProjectStudy/Microservice/redis-service/src/main/java/model/OrderDetail.java
+/Users/trongbui/Documents/ProjectStudy/Microservice/redis-service/src/main/java/model/Product.java
