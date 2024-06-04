@@ -1,8 +1,5 @@
 package com.trong.redisservice.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trong.redisservice.model.Product;
 import com.trong.redisservice.repository.ProductRepo;
 import com.trong.redisservice.service.ProductService;
@@ -15,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class RedisController {
@@ -25,7 +21,7 @@ public class RedisController {
     private ProductRepo productRepo;
 
     @PostMapping("/save-products")
-    public ResponseEntity<String> saveProducts(@RequestBody Object param) throws JsonProcessingException {
+    public ResponseEntity<String> saveProducts(@RequestBody Object param) {
         try {
             List<Product> products = (List<Product>) param;
             productService.saveAllProducts(products, "", "", null);
@@ -36,7 +32,7 @@ public class RedisController {
     }
 
     @GetMapping("/get-products")
-    public ResponseEntity<Object> getProducts() throws JsonProcessingException {
+    public ResponseEntity<Object> getProducts() {
         try {
             return new ResponseEntity<>(productService.getAllProducts("", "", null), HttpStatus.OK);
         } catch (Exception e) {
@@ -45,7 +41,7 @@ public class RedisController {
     }
 
     @GetMapping("/clear-product")
-    public ResponseEntity<Object> clearAllProduct() throws JsonProcessingException {
+    public ResponseEntity<Object> clearAllProduct() {
         try {
             productService.clearAllProducts();
         } catch (Exception e) {

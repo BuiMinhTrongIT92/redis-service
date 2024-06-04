@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -57,6 +58,7 @@ public class ProductServiceImpl implements ProductService {
             String key = getKey("all-products".toLowerCase(), keyword, id, pageRequest);
             String json = redisObjectMapper.writeValueAsString(products);
             redisTemplate.opsForValue().set(key, json);
+            redisTemplate.expire(key, 30, TimeUnit.MINUTES);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
