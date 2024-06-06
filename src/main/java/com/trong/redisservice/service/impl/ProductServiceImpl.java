@@ -13,6 +13,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -24,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ObjectMapper redisObjectMapper;
 
-    private String getKey(String actionType, String keyword, String productId, PageRequest pageRequest) {
+    private String getKey(String actionType, String keyword, String productId,PageRequest pageRequest) {
         String key = "";
         if (null != pageRequest) {
             int pageNumber = pageRequest.getPageNumber();
@@ -33,16 +35,23 @@ public class ProductServiceImpl implements ProductService {
             String sortDirection = sort.getOrderFor("id").getDirection() == Sort.Direction.ASC ? "asc" : "desc";
             key = String.format("%s_%s_%s_%s_%s_%s", actionType, keyword, productId, pageNumber, pageSize, sortDirection);
         } else {
-            key = String.format("%s_%s", actionType, keyword, productId);
+            key = String.format("%s_%s_%s", actionType, keyword, productId);
         }
         return key;
     }
 
     @Override
-    public List<Product> getAllProducts(String keyword, String id, PageRequest pageRequest) {
+    public List<Product> getAllProducts(Map<String, Object> keywords, PageRequest pageRequest) {
+        String id = (String) Optional.ofNullable(keywords.get("_id")).orElse("");
+        String keyword = "";
+        for (Map.Entry<String, Object> entry : keywords.entrySet()) {
+            if (entry.getValue() != null && !entry.getValue().toString().trim().isEmpty()) {
+                keyword = keyword.concat("_" + entry.getValue().toString().trim());
+            }
+        }
         List<Product> products = null;
         try {
-            String key = getKey("all-products".toLowerCase(), keyword, id, pageRequest);
+            String key = getKey("products".toLowerCase(), keyword, id, pageRequest);
             String json = (String) redisTemplate.opsForValue().get(key);
             products = redisObjectMapper.readValue(json, new TypeReference<List<Product>>() {
             });
@@ -53,9 +62,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void saveAllProducts(List<Product> products, String keyword, String id, PageRequest pageRequest) {
+    public void saveAllProducts(List<Product> products, Map<String, Object> keywords, PageRequest pageRequest) {
         try {
-            String key = getKey("all-products".toLowerCase(), keyword, id, pageRequest);
+            String id = (String) Optional.ofNullable(keywords.get("_id")).orElse("");
+            String keyword = "";
+            for (Map.Entry<String, Object> entry : keywords.entrySet()) {
+                if (entry.getValue() != null && !entry.getValue().toString().trim().isEmpty()) {
+                    keyword = keyword.concat("_" + entry.getValue().toString().trim());
+                }
+            }
+            String key = getKey("products".toLowerCase(), keyword, id, pageRequest);
             String json = redisObjectMapper.writeValueAsString(products);
             redisTemplate.opsForValue().set(key, json);
             redisTemplate.expire(key, 30, TimeUnit.MINUTES);
